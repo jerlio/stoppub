@@ -10,7 +10,6 @@ object NotificationHelper {
 
     private const val CHANNEL_ID = "blocked_calls_channel"
     private const val CHANNEL_NAME = "Appels bloqués"
-    private const val NOTIFICATION_ID = 1
 
     fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -45,6 +44,8 @@ object NotificationHelper {
             .build()
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(NOTIFICATION_ID, notification)
+        // Use timestamp as unique notification ID to allow multiple notifications
+        val notificationId = System.currentTimeMillis().toInt()
+        notificationManager.notify(notificationId, notification)
     }
 }
