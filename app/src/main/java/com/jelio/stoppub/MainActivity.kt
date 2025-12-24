@@ -31,6 +31,10 @@ import java.util.Date
 import java.util.Locale
 import com.jelio.stoppub.ui.theme.StopPubTheme
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Switch
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +54,7 @@ class MainActivity : ComponentActivity() {
 fun CallLogsScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val logs = remember { mutableStateListOf<CallLogEntry>() }
+    var notificationsEnabled by remember { mutableStateOf(SettingsStore.isNotificationsEnabled(context)) }
 
     // fonction locale pour charger/rafraîchir les logs
     fun load() {
@@ -84,6 +89,21 @@ fun CallLogsScreen(modifier: Modifier = Modifier) {
                 // remplace l'icône material par un texte/emoji pour éviter la dépendance manquante
                 Text(text = "⟳", fontSize = 18.sp)
             }
+        }
+
+        // Settings row for notification toggle
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically) {
+            Text(text = "Notifications d'appels bloqués", fontSize = 16.sp, modifier = Modifier.weight(1f))
+            Switch(
+                checked = notificationsEnabled,
+                onCheckedChange = { enabled ->
+                    notificationsEnabled = enabled
+                    SettingsStore.setNotificationsEnabled(context, enabled)
+                }
+            )
         }
 
         if (logs.isEmpty()) {
