@@ -29,6 +29,11 @@ class PrefixCallScreeningService : CallScreeningService() {
         // Sauvegarde de l'appel
         CallLogStore.addLog(this, number, shouldBlock)
 
+        // Send notification if call is blocked
+        if (shouldBlock) {
+            NotificationHelper.showBlockedCallNotification(this, number)
+        }
+
         // 5️⃣ Réponse à Android
         val response = CallResponse.Builder()
             .setDisallowCall(shouldBlock)   // empêche l'appel
